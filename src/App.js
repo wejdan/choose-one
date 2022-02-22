@@ -10,14 +10,27 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUsers } from "./store/actions/users";
-import { getAllUsers } from "./DATA";
+import { loadQuestions } from "./store/actions/questions";
+import { getAllUsers, getAllQuestions } from "./DATA";
+
 function App() {
   const dispatch = useDispatch();
-  useEffect(async () => {
+
+  const loadAllUsers = async () => {
     const response = await getAllUsers();
     console.log(response);
 
     dispatch(loadUsers(response));
+  };
+  const loadAllQusetions = async () => {
+    const response = await getAllQuestions();
+    console.log(response);
+
+    dispatch(loadQuestions(response));
+  };
+  useEffect(async () => {
+    loadAllUsers();
+    loadAllQusetions();
   }, []);
   return (
     <BrowserRouter>
