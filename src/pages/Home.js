@@ -40,6 +40,16 @@ function Home() {
   const users = useSelector((store) => store.users);
   const user_id = useSelector((store) => store.authedUser);
 
+  var sortedQusetions = [];
+
+  for (var key in qusetions) {
+    sortedQusetions.push(qusetions[key]);
+  }
+  sortedQusetions.sort(function (a, b) {
+    return b.created - a.created;
+  });
+
+  console.log("user_id", user_id);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -47,12 +57,8 @@ function Home() {
   };
 
   const isQusetionAnswered = (qusetionId) => {
-    let current_user;
-    Object.keys(users).map((key) => {
-      if (users[key].id == user_id) {
-        current_user = users[key];
-      }
-    });
+    let current_user = users[user_id];
+
     console.log(current_user.answers);
     return current_user.answers.hasOwnProperty(qusetionId);
   };
@@ -85,18 +91,18 @@ function Home() {
             bgcolor: "background.paper",
           }}
         >
-          <Tab label="Answered" {...a11yProps(0)} />
-          <Tab label="Unanswered" {...a11yProps(1)} />
+          <Tab label="Unanswered" {...a11yProps(0)} />
+          <Tab label="Answered" {...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <List>
-            {Object.keys(qusetions).map((key) => {
-              if (isQusetionAnswered(qusetions[key].id)) {
+            {sortedQusetions.map((qusetion) => {
+              if (!isQusetionAnswered(qusetion.id)) {
                 return (
                   <ListItem
-                    key={qusetions[key].id}
+                    key={qusetion.id}
                     component={Link}
-                    to={`/qusetion/${qusetions[key].id}`}
+                    to={`/qusetion/${qusetion.id}`}
                   >
                     {" "}
                     <ListItemText
@@ -105,8 +111,8 @@ function Home() {
                           variant="body1"
                           sx={{ fontWeight: "600", color: "warning.main" }}
                         >
-                          {qusetions[key].firstOption.string} or $
-                          {qusetions[key].secondOption.string}
+                          {qusetion.firstOption.string} or{" "}
+                          {qusetion.secondOption.string}
                         </Typography>
                       }
                     />
@@ -117,13 +123,13 @@ function Home() {
           </List>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {Object.keys(qusetions).map((key) => {
-            if (isQusetionAnswered(qusetions[key].id) == false) {
+          {sortedQusetions.map((qusetion) => {
+            if (isQusetionAnswered(qusetion.id)) {
               return (
                 <ListItem
-                  key={qusetions[key].id}
+                  key={qusetion.id}
                   component={Link}
-                  to={`/qusetion/${qusetions[key].id}`}
+                  to={`/qusetion/${qusetion.id}`}
                 >
                   <ListItemText
                     primary={
@@ -131,8 +137,8 @@ function Home() {
                         variant="body1"
                         sx={{ fontWeight: "600", color: "warning.main" }}
                       >
-                        {qusetions[key].firstOption.string} or{" "}
-                        {qusetions[key].secondOption.string}
+                        {qusetion.firstOption.string} or{" "}
+                        {qusetion.secondOption.string}
                       </Typography>
                     }
                   />

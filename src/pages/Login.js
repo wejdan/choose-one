@@ -69,7 +69,7 @@ function Login() {
           >
             {Object.keys(users).map((key) => {
               return (
-                <MenuItem key={users[key].id} value={users[key].id}>
+                <MenuItem key={users[key].id} value={key}>
                   {users[key].fullname}
                 </MenuItem>
               );
