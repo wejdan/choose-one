@@ -6,12 +6,46 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
 import React from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 function SingleQusetion() {
-  const [value, setValue] = React.useState("female");
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const qusetions = useSelector((store) => store.qusetions);
 
+  const users = useSelector((store) => store.users);
+  const user_id = useSelector((store) => store.authedUser);
+
+  const [value, setValue] = React.useState("");
+  let question = {
+    firstOption: {},
+    secondOption: {},
+  };
+  let isAnswered;
+  let totalAnswers;
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  const isQusetionAnswered = (qusetionId) => {
+    let current_user;
+    Object.keys(users).map((key) => {
+      if (users[key].id == user_id) {
+        current_user = users[key];
+      }
+    });
+    console.log(current_user.answers);
+    return current_user.answers.hasOwnProperty(qusetionId);
+  };
+
+  if (Object.keys(qusetions).length) {
+    if (qusetions[id]) {
+      question = qusetions[id];
+      isAnswered = isQusetionAnswered(id);
+      totalAnswers = 0;
+    }
+  } else {
+    return <p>qusetion was not found</p>;
+  }
 
   return (
     <Box
@@ -53,26 +87,26 @@ function SingleQusetion() {
             onChange={handleChange}
           >
             <FormControlLabel
-              value="female"
+              value="firstOption"
               control={<Radio />}
               label={
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: "600", color: "warning.main" }}
                 >
-                  Go out with your friends on weekends
+                  {question.firstOption.string}
                 </Typography>
               }
             />
             <FormControlLabel
-              value="male"
+              value="secondOption"
               control={<Radio />}
               label={
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: "600", color: "warning.main" }}
                 >
-                  Stay at home on weekends and relax
+                  {question.secondOption.string}
                 </Typography>
               }
             />

@@ -56,7 +56,6 @@ function Home() {
     console.log(current_user.answers);
     return current_user.answers.hasOwnProperty(qusetionId);
   };
-  isQusetionAnswered();
   return (
     <Box
       sx={{
